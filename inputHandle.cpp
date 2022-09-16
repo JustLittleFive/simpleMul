@@ -40,13 +40,14 @@ int main()
     int i = 0;
     int l = 0;
 
-    int countE = 0;  //count E appear times, so below
+    int countE = 0;    // count E appear times, so below
     int countP = 0;
     int countN = 0;
+    int indexE1 = -1;
 
     for (i = 0, l = 0; l < len1; i++, l++)
     {
-        if ((start1[l] < 45 || start1[l] == 47) 
+        if ((start1[l] < 45 || start1[l] == 47)
             || (start1[l] > 57 && start1[l] != 101))
         {
             cout << "Invalid input!" << endl;
@@ -56,16 +57,17 @@ int main()
         {
         case 'e'  /* constant-expression */:
             /* code */
-            countE ++;
+            countE++;
+            indexE1 = l;
             continue;
 
         case '.':
-            countP ++;
+            countP++;
             i--;
             continue;
 
         case '-':
-            countN ++;
+            countN++;
             continue;
 
         default:
@@ -78,23 +80,25 @@ int main()
         }
     }
 
-    countE = 0;  //reset count E appear times, so below
+    countE = 0;    // reset count E appear times, so below
     countP = 0;
     countN = 0;
+    int indexE2 = -1;
 
     for (i = 0, l = 0; l < len2; i++, l++)
     {
-        if ((start2[l] < 48 && start2[l] != 45 && start2[l] != 46) 
+        if ((start2[l] < 48 && start2[l] != 45 && start2[l] != 46)
             || (start2[l] > 57 && start2[l] != 101))
         {
             cout << "Invalid input!" << endl;
             return 0;
-        }  
+        }
         switch (start2[l])
         {
         case 'e'  /* constant-expression */:
             /* code */
             countE++;
+            indexE2 = l;
             continue;
 
         case '.':
@@ -109,7 +113,7 @@ int main()
         default:
             array2[i] = start2[l];
         }
-        if (countE > 1 || countN > 1 || countP > 1)
+        if (countE > 1 || countN > 2 || countP > 1)
         {
             cout << "Invalid input!" << endl;
             return 0;
