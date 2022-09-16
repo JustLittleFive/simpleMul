@@ -57,13 +57,16 @@ int main()
         case 'e'  /* constant-expression */:
             /* code */
             countE ++;
+            continue;
 
         case '.':
             countP ++;
             i--;
+            continue;
 
         case '-':
             countN ++;
+            continue;
 
         default:
             array1[i] = start1[l];
@@ -92,13 +95,16 @@ int main()
         case 'e'  /* constant-expression */:
             /* code */
             countE++;
+            continue;
 
         case '.':
             countP++;
             i--;
+            continue;
 
         case '-':
             countN++;
+            continue;
 
         default:
             array2[i] = start2[l];
