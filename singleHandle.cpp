@@ -22,7 +22,7 @@ using namespace std;
 
 int main()
 {
-    tuple<bool, char *, int> result;
+    tuple<bool, char *, int, int> result;
 
     string str = "";
 
@@ -41,6 +41,7 @@ int main()
     int countP = 0;
     int countN = 0;
     int indexE = -1;
+    int flocate = -1;
 
     for (i = 0, l = 0; l < len; i++, l++)
     {
@@ -60,6 +61,7 @@ int main()
 
         case '.':
             countP++;
+            flocate++;
             i--;
             continue;
 
@@ -69,6 +71,10 @@ int main()
 
         default:
             array[i] = start[l];
+        }
+        if (flocate > -1)
+        {
+            flocate++;
         }
         if (countE > 1 || countN > 2 || countP > 1)
         {
@@ -83,6 +89,5 @@ int main()
         isNegative = true;
     }
 
-    result = make_tuple(isNegative, array, indexE);
-
+    result = make_tuple(isNegative, array, indexE, flocate);
 }
