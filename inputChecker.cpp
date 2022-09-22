@@ -51,9 +51,27 @@ int main() {
         return 0;
     }
 
+    switch (numType) {
+        case 1:
+
+    }
 
     const char* start = str.c_str();
 
+    int len = str.length();
+
+    char *array = new char[len];
+
+    int i = 0;
+    int l = 0;
+
+    int indexE = -1;
+    int flocate = -1;
+
+}
+
+char *str2charl(string str) {
+    const char* start = str.c_str();
     int len = str.length();
 
     char *array = new char[len];
@@ -70,32 +88,10 @@ int main() {
             cout << "Invalid input!" << endl;
             return 0;
         }
-         switch (start[l]) {
-        case 'e'  /* constant-expression */:
-            /* code */
-            countE++;
-            indexE = l;
-            continue;
-
-        case '.':
-            countP++;
-            flocate++;
-            i--;
-            continue;
-
-        case '-':
-            countN++;
-            continue;
-
-        default:
-            array[i] = start[l];
-        }
+        array[i] = start[l];
         if (flocate > -1) {
             flocate++;
         }
-        if (countE > 1 || countN > 2 || countP > 1) {
-            cout << "Invalid input!" << endl;
-            return 0;
-        }
     }
+    return array;
 }
