@@ -20,17 +20,37 @@
 
 using namespace std;
 
-int main()
-{
+int main() {
     string str = "";
     cin >> str;
 
     bool isNegative = 0;
-    if (str[0] == '-')
-    {
+    if (str[0] == '-') {
         isNegative = 1;
         str.erase(0, 1);
     }
+
+    int countE = count(str.begin(), str.end(), 'E');
+    int counte = count(str.begin(), str.end(), 'e');
+    int countP = count(str.begin(), str.end(), '.');
+    int countN = count(str.begin(), str.end(), '-');
+
+    int numType = 0;
+
+    if ((countE + counte + countN +countP) == 0) {
+        // input maybe int/long
+        numType = 1;
+    } else if (countP == 1 && (countE + counte + countN) == 0) {
+        // input maybe float/double not in Scientific notation
+        numType = 2;
+    } else if ((countE + counte) == 1 && countP < 2 && countN < 2) {
+        // input maybe float/double in Scientific notation
+        numType = 3;
+    } else {
+        cout << "Invalid input!" << endl;
+        return 0;
+    }
+
 
     const char* start = str.c_str();
 
@@ -41,27 +61,16 @@ int main()
     int i = 0;
     int l = 0;
 
-
-
-    int countE = count(str.begin(), str.end(), 'E');
-    int counte = count(str.begin(), str.end(), 'e');
-    int countP = count(str.begin(), str.end(), '.');
-    int countN = count(str.begin(), str.end(), '-');
-
-    
     int indexE = -1;
     int flocate = -1;
 
-    for (i = 0, l = 0; l < len; i++, l++)
-    {
+    for (i = 0, l = 0; l < len; i++, l++) {
         if ((start[l] < 45 || start[l] == 47)
-            || (start[l] > 57 && start[l] != 101))
-        {
+            || (start[l] > 57 && start[l] != 101)) {
             cout << "Invalid input!" << endl;
             return 0;
         }
-         switch (start[l])
-        {
+         switch (start[l]) {
         case 'e'  /* constant-expression */:
             /* code */
             countE++;
@@ -81,15 +90,12 @@ int main()
         default:
             array[i] = start[l];
         }
-        if (flocate > -1)
-        {
+        if (flocate > -1) {
             flocate++;
         }
-        if (countE > 1 || countN > 2 || countP > 1)
-        {
+        if (countE > 1 || countN > 2 || countP > 1) {
             cout << "Invalid input!" << endl;
             return 0;
         }
     }
-
 }
