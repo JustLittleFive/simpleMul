@@ -14,6 +14,14 @@
  limitations under the License.
  */
 
+/* 
+This is a test case of std::stod() method.
+stod() is convenient to transform string to double in scientific notation format 
+to deal with double times double
+
+However, its input check is poor.
+ */
+
 #include <iostream>
 
 bool isNumber(const std::string str)
@@ -22,6 +30,10 @@ bool isNumber(const std::string str)
     try
     {
         checker = std::stod(str);
+    /*
+    hint: if string combine like "123qwe", 
+    stod() will convert it into "123"(double) with no exception.
+     */
     }
     catch(const std::exception& e)
     {
@@ -37,12 +49,10 @@ int main()
     std::string str1 = "";
     std::string str2 = "";
 
-    //hint: if string combine like "123qwe", stod() will convert it into "123"(double). 
-
     std::cin >> str1 >> str2;
 
     if (isNumber(str1) && isNumber(str2))
-    {   
+    {
         first = std::stod(str1);
         second = std::stod(str2);
         std::cout << first * second  << std::endl;
