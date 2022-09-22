@@ -53,20 +53,9 @@ int main() {
 
     switch (numType) {
         case 1:
+        char *array = str2charl(str);
 
     }
-
-    const char* start = str.c_str();
-
-    int len = str.length();
-
-    char *array = new char[len];
-
-    int i = 0;
-    int l = 0;
-
-    int indexE = -1;
-    int flocate = -1;
 
 }
 
