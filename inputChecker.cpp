@@ -20,12 +20,14 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     string str = "";
     cin >> str;
 
     bool isNegative = 0;
-    if (str[0] == '-') {
+    if (str[0] == '-')
+    {
         isNegative = 1;
         str.erase(0, 1);
     }
@@ -37,30 +39,83 @@ int main() {
 
     int numType = 0;
 
-    if ((countE + counte + countN +countP) == 0) {
+    if ((countE + counte + countN + countP) == 0)
+    {
         // input maybe int/long
         numType = 1;
-    } else if (countP == 1 && (countE + counte + countN) == 0) {
+    }
+    else if (countP == 1 && (countE + counte + countN) == 0)
+    {
         // input maybe float/double not in Scientific notation
         numType = 2;
-    } else if ((countE + counte) == 1 && countP < 2 && countN < 2) {
+    }
+    else if ((countE + counte) == 1 && countP < 2 && countN < 2)
+    {
         // input maybe float/double in Scientific notation
         numType = 3;
-    } else {
+    }
+    else
+    {
         cout << "Invalid input!" << endl;
         return 0;
     }
 
-    switch (numType) {
-        case 1:
+    switch (numType)
+    {
+    case 1:
+        // array could be pure-num char list
         char *array = str2charl(str);
-
+        break;
+    case 2:
+        // use pLocation to record '.'s position
+        int pLocation = str.find('.');
+        str.erase(pLocation, 1);
+        char *array = str2charl(str);
+        break;
+    case 3:
+        int pLocation = str.find('.');
+        int eLocation = str.find('e');
+        if (!eLocation)
+        {
+            eLocation = str.find('E');
+        }
+        int nLocation = str.find('-');
+        // dual validity check
+        if (pLocation < eLocation && (nLocation == string::npos || (eLocation + 1) == nLocation))
+        {
+            if (nLocation)
+            {
+                str.erase(nLocation, 1);
+            }
+            str.erase(eLocation, 1);
+            if (pLocation)
+            {
+                str.erase(pLocation, 1);
+            }
+            char *array = str2charl(str);
+            break;
+        }
+        else
+        {
+            cout << "Invalid input!" << endl;
+            return 0;
+        }
+        break;
+    default:
+        cout << "Invalid input!" << endl;
+        return 0;
     }
+
+    // input check & convert: DONE
+
+    
+
 
 }
 
-char *str2charl(string str) {
-    const char* start = str.c_str();
+char *str2charl(string str)
+{
+    const char *start = str.c_str();
     int len = str.length();
 
     char *array = new char[len];
@@ -71,14 +126,16 @@ char *str2charl(string str) {
     int indexE = -1;
     int flocate = -1;
 
-    for (i = 0, l = 0; l < len; i++, l++) {
-        if ((start[l] < 45 || start[l] == 47)
-            || (start[l] > 57 && start[l] != 101)) {
+    for (i = 0, l = 0; l < len; i++, l++)
+    {
+        if ((start[l] < 45 || start[l] == 47) || (start[l] > 57 && start[l] != 101))
+        {
             cout << "Invalid input!" << endl;
             return 0;
         }
         array[i] = start[l];
-        if (flocate > -1) {
+        if (flocate > -1)
+        {
             flocate++;
         }
     }
