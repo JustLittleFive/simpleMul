@@ -87,11 +87,13 @@ int main()
             {
                 str.erase(nLocation, 1);
             }
-            str.erase(eLocation, 1);
             if (pLocation)
             {
                 str.erase(pLocation, 1);
+                eLocation -= 1;
             }
+            // TODO(JustLittleFive): Should split string first
+            str.erase(eLocation, 1);
             array = str2charl(str);
             break;
         }
@@ -108,8 +110,6 @@ int main()
 
     // input check & convert: DONE
     string res = hugeMul(array, array);
-
-    
 }
 
 char *str2charl(string str)
