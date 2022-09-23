@@ -28,7 +28,7 @@ int main()
 
     cin >> str;
 
-    const char* start = str.c_str();
+    const char *start = str.c_str();
 
     int len = str.length();
 
@@ -37,7 +37,7 @@ int main()
     int i = 0;
     int l = 0;
 
-    int countE = 0;    // count E appear times, so below
+    int countE = 0; // count E appear times, so below
     int countP = 0;
     int countN = 0;
     int indexE = -1;
@@ -45,15 +45,14 @@ int main()
 
     for (i = 0, l = 0; l < len; i++, l++)
     {
-        if ((start[l] < 45 || start[l] == 47)
-            || (start[l] > 57 && start[l] != 101))
+        if ((start[l] < 45 || start[l] == 47) || (start[l] > 57 && start[l] != 101))
         {
             cout << "Invalid input!" << endl;
             return 0;
         }
-         switch (start[l])
+        switch (start[l])
         {
-        case 'e'  /* constant-expression */:
+        case 'e' /* constant-expression */:
             /* code */
             countE++;
             indexE = l;

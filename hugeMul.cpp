@@ -26,8 +26,8 @@ int main()
 
     cin >> str1 >> str2;
 
-    const char* start1 = str1.c_str();
-    const char* start2 = str2.c_str();
+    const char *start1 = str1.c_str();
+    const char *start2 = str2.c_str();
 
     int len1 = str1.length();
     int len2 = str2.length();
@@ -79,22 +79,22 @@ int main()
 
     // char *res = (char *)malloc(sizeof(char)*(sizeof(array1) + sizeof(array2)));
     // memset(res, 0, sizeof(char)*(sizeof(array1) + sizeof(array2)));
-    char res[strlen(array1) + strlen(array2)] = {0};    
+    char res[strlen(array1) + strlen(array2)] = {0};
 
     for (i = strlen(array1) - 1; i >= 0; i--)
     {
-        for (l  = strlen(array2) - 1; l >= 0; l--)
+        for (l = strlen(array2) - 1; l >= 0; l--)
         {
             // -'0' trans char to number in real by minus/add '0's ascii so we can caculate directly
             res[i + l + 1] += (array1[i] - '0') * (array2[l] - '0');
-            res[i + l] +=  res[i + l + 1] / 10;
+            res[i + l] += res[i + l + 1] / 10;
             res[i + l + 1] %= 10;
         }
     }
 
     int countZero = 0;
     while (res[countZero] == 0)
-    {  
+    {
         countZero++;
     }
     // char *ret = (char *)malloc(sizeof(char)* (sizeof(array1) + sizeof(array2) + 2));
@@ -104,13 +104,13 @@ int main()
     if (flocate == 0)
     {
         sizeRet = sizeof(res) - countZero;
-    }    
+    }
     else
     {
         sizeRet = sizeof(res) - countZero + 1;
     }
 
-    char ret[sizeRet + 1] = {0}; 
+    char ret[sizeRet + 1] = {0};
 
     for (i = countZero, l = 0; i < sizeof(res); i++, l++)
     {
@@ -137,4 +137,31 @@ int main()
     // }
 
     return 0;
+}
+
+string hugeMul(char *array1, char *array2)
+{
+    char res[strlen(array1) + strlen(array2)] = {0};
+
+    for (int i = strlen(array1) - 1; i >= 0; i--)
+    {
+        for (int l = strlen(array2) - 1; l >= 0; l--)
+        {
+            // -'0' converts char to number in real
+            // by minus/add '0's ascii so we can caculate directly
+            res[i + l + 1] += (array1[i] - '0') * (array2[l] - '0');
+            res[i + l] += res[i + l + 1] / 10;
+            res[i + l + 1] %= 10;
+        }
+    }
+
+    string ret(res);
+    if (ret[0] == '0')
+    {
+        ret.erase(0, 1);
+    }
+
+    cout << ret << endl;
+
+    return ret;
 }

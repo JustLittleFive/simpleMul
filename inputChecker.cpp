@@ -14,9 +14,8 @@
  limitations under the License.
  */
 
-#include <iostream>
+#include <components.hpp>
 #include <algorithm>
-#include <cstring>
 
 using namespace std;
 
@@ -60,17 +59,18 @@ int main()
         return 0;
     }
 
+    char *array = new char(0);
     switch (numType)
     {
     case 1:
         // array could be pure-num char list
-        char *array = str2charl(str);
+        array = str2charl(str);
         break;
     case 2:
         // use pLocation to record '.'s position
         int pLocation = str.find('.');
         str.erase(pLocation, 1);
-        char *array = str2charl(str);
+        array = str2charl(str);
         break;
     case 3:
         int pLocation = str.find('.');
@@ -92,7 +92,7 @@ int main()
             {
                 str.erase(pLocation, 1);
             }
-            char *array = str2charl(str);
+            array = str2charl(str);
             break;
         }
         else
@@ -107,10 +107,7 @@ int main()
     }
 
     // input check & convert: DONE
-
-    
-
-
+    string res = hugeMul(array, array);
 }
 
 char *str2charl(string str)
