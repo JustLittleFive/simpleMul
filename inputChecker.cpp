@@ -14,8 +14,8 @@
  limitations under the License.
  */
 
-#include <components.hpp>
 #include <algorithm>
+#include <components.hpp>
 
 using namespace std;
 
@@ -59,18 +59,20 @@ int main()
         return 0;
     }
 
-    char *array = new char(0);
+    char *arrayHead = new char(0);
+    char *arrayTail = new char(0);
+
     switch (numType)
     {
     case 1:
         // array could be pure-num char list
-        array = str2charl(str);
+        arrayHead = str2charl(str);
         break;
     case 2:
         // use pLocation to record '.'s position
         int pLocation = str.find('.');
         str.erase(pLocation, 1);
-        array = str2charl(str);
+        arrayHead = str2charl(str);
         break;
     case 3:
         int pLocation = str.find('.');
@@ -93,8 +95,12 @@ int main()
                 eLocation -= 1;
             }
             // TODO(JustLittleFive): Should split string first
+            // DONE
+            string strHead = str.substr(0, eLocation);
             str.erase(eLocation, 1);
-            array = str2charl(str);
+            string strTail = str.substr(eLocation, str.size());
+            arrayHead = str2charl(strHead);
+            arrayTail = str2charl(strTail);
             break;
         }
         else
@@ -109,7 +115,8 @@ int main()
     }
 
     // input check & convert: DONE
-    string res = hugeMul(array, array);
+    // OUTPUT: arryHead, arrayTail, plocation
+    string res = hugeMul(arrayHead, arrayHead);
 }
 
 char *str2charl(string str)
