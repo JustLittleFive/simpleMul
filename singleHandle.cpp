@@ -22,8 +22,6 @@ using namespace std;
 
 int main()
 {
-    tuple<bool, char *, int, int> result;
-
     string str = "";
 
     cin >> str;
@@ -88,5 +86,5 @@ int main()
         isNegative = true;
     }
 
-    result = make_tuple(isNegative, array, indexE, flocate);
+    tuple<bool, char *, int, int> result = make_tuple(isNegative, array, indexE, flocate);
 }

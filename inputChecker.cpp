@@ -108,6 +108,8 @@ int main()
 
     // input check & convert: DONE
     string res = hugeMul(array, array);
+
+    
 }
 
 char *str2charl(string str)
