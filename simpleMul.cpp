@@ -193,11 +193,8 @@ int main(int argc, char *argv[]) {
   // calculate decimal point position
   int pLocation = get<2>(input1) + get<2>(input2);
   // combine decimal part with decimal point
-  cout << "head len: " << resHead.length() << endl;
-  cout << "plocation: " << pLocation << endl;
   while (resHead.length() <= pLocation) {
     resHead.insert(0, "0");
-    pLocation += 1;
   }
   if (pLocation > 0) {
     resHead.insert(resHead.length() - pLocation, ".");
