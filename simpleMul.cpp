@@ -87,9 +87,9 @@ tuple<char *, int, int, bool> inputHandle(string str) {
     }
     case 2: {
       // use pLocation to record '.'s position
-      pLocation = str.find('.');
-      str.erase(pLocation, 1);
-      pLocation = str.length() - pLocation;
+      int rpLocation = str.find('.');
+      str.erase(rpLocation, 1);
+      pLocation = str.length() - rpLocation;
       arrayHead = str2charl(str);
       break;
     }
@@ -110,9 +110,9 @@ tuple<char *, int, int, bool> inputHandle(string str) {
           strHead.erase(rpLocation, 1);
         }
         pLocation = strHead.length() - rpLocation;
+        arrayHead = str2charl(strHead);
         str.erase(eLocation, 1);
         string strTail = str.substr(eLocation, str.size());
-        arrayHead = str2charl(strHead);
         arrayTail = stoi(str2charl(strTail));
         break;
       } else {
@@ -156,9 +156,11 @@ string hugeMul(char *array1, char *array2) {
     retP[i] = res[i] + '0';
   }
 
-  string ret(retP);
-  while (ret[0] == '0') {
-    ret.erase(0, 1);
+  string ret = "";
+  for (int i = 0; i < sizeof(retP); i++) {
+    if (retP[i] != '0') {
+      ret.push_back(retP[i]);
+    }
   }
 
   return ret;
@@ -191,10 +193,15 @@ int main(int argc, char *argv[]) {
   // calculate decimal point position
   int pLocation = get<2>(input1) + get<2>(input2);
   // combine decimal part with decimal point
+  cout << "head len: " << resHead.length() << endl;
+  cout << "plocation: " << pLocation << endl;
   while (resHead.length() <= pLocation) {
     resHead.insert(0, "0");
+    pLocation += 1;
   }
-  resHead.insert(resHead.length() - pLocation, ".");
+  if (pLocation > 0) {
+    resHead.insert(resHead.length() - pLocation, ".");
+  }
   // format output
   cout << str1 << " * " << str2 << " = ";
   if (isNegative) {
