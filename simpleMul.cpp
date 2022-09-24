@@ -211,6 +211,6 @@ int main(int argc, char *argv[]) {
     cout << 'E' << resTail;
   }
   cout << endl;
-  /// @todo: combine the result into one object to store/transmit/reuse 
+  /// @todo: combine the result into one object to store/transmit/reuse
   return 0;
 }
