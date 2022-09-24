@@ -15,15 +15,28 @@
  */
 
 #include <algorithm>
+#include <tuple>
 #include <components.hpp>
 
 using namespace std;
 
-int main()
+int main(int argc, char *argv[])
 {
-    string str = "";
-    cin >> str;
+    string str1 = argv[1];
+    string str2 = argv[2];
+    tuple<char *, int, int, bool> input1;
+    tuple<char *, int, int, bool> input2;
+    input1 = inputHandle(str1);
+    input2 = inputHandle(str2);
 
+    
+}
+
+/// @brief Input check + handle
+/// @param str: main() argv[1] or argv[2]
+/// @return tuple<char *arrayHead, int arrayTail, int pLocation, bool isNegative>
+tuple<char *, int, int, bool> inputHandle(string str)
+{
     bool isNegative = 0;
     if (str[0] == '-')
     {
@@ -56,11 +69,12 @@ int main()
     else
     {
         cout << "Invalid input!" << endl;
-        return 0;
+        exit(0);
     }
 
     char *arrayHead = new char(0);
-    char *arrayTail = new char(0);
+    int arrayTail = 0;
+    int pLocation = -1;
 
     switch (numType)
     {
@@ -70,12 +84,12 @@ int main()
         break;
     case 2:
         // use pLocation to record '.'s position
-        int pLocation = str.find('.');
+        pLocation = str.find('.');
         str.erase(pLocation, 1);
         arrayHead = str2charl(str);
         break;
     case 3:
-        int pLocation = str.find('.');
+        pLocation = str.find('.');
         int eLocation = str.find('e');
         if (!eLocation)
         {
@@ -100,23 +114,24 @@ int main()
             str.erase(eLocation, 1);
             string strTail = str.substr(eLocation, str.size());
             arrayHead = str2charl(strHead);
-            arrayTail = str2charl(strTail);
+            arrayTail = stoi(str2charl(strTail));
             break;
         }
         else
         {
             cout << "Invalid input!" << endl;
-            return 0;
+            exit(0);
         }
         break;
     default:
         cout << "Invalid input!" << endl;
-        return 0;
+        exit(0);
     }
 
     // input check & convert: DONE
     // OUTPUT: arryHead, arrayTail, plocation
-    string res = hugeMul(arrayHead, arrayHead);
+    tuple<char *, int, int, bool>ret = make_tuple(arrayHead, arrayTail, pLocation, isNegative);
+    return ret;
 }
 
 char *str2charl(string str)
