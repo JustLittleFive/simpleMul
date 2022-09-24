@@ -156,9 +156,12 @@ string hugeMul(char *array1, char *array2) {
     retP[i] = res[i] + '0';
   }
 
+  // hint: use string ret(retP) directly could possiblely include the '\n', and
+  // will ruin the decimal point position calculation.
   string ret = "";
   for (int i = 0; i < sizeof(retP); i++) {
     if (retP[i] != '0') {
+      // use push_back() to avoid the hint
       ret.push_back(retP[i]);
     }
   }
@@ -185,7 +188,6 @@ int main(int argc, char *argv[]) {
 
   // calculate result - or +
   bool isNegative = get<3>(input1) ^ get<3>(input2);
-
   // calculate result value or its decimal part
   string resHead = hugeMul(get<0>(input1), get<0>(input2));
   // calculate result power part
@@ -209,5 +211,6 @@ int main(int argc, char *argv[]) {
     cout << 'E' << resTail;
   }
   cout << endl;
+  /// @todo: combine the result into one object to store/transmit/reuse 
   return 0;
 }
