@@ -21,17 +21,15 @@
 
 using namespace std;
 
-/// @brief  Convert string to char[]
+/// @brief Convert string to char[] with in-progress validity check
 /// @param str: string
-/// @return char *: the start of char[]
+/// @return array: char[]
 char *str2charl(string str) {
   const char *input = str.c_str();
   int len = str.length();
   char *array = new char[len];
 
-  int i = 0;
-
-  for (i = 0; i < len; i++) {
+  for (int i = 0; i < len; i++) {
     if (array[i] != 45 && array[i] < 48 && array[i] > 57) {
       cout << "Invalid input!" << endl;
       exit(0);
@@ -41,10 +39,14 @@ char *str2charl(string str) {
   return array;
 }
 
-/// @brief Input check + handle
-/// @param str: main() argv[1] or argv[2]
+/// @brief Input early check + preprocessing
+/// @param str: string, main() argv[1] or argv[2]
 /// @return tuple<char *arrayHead, int arrayTail, int pLocation, bool
 /// isNegative>
+///   @retval arrayHead: the decimal part
+///   @retval arrayTail: ths power part
+///   @retval pLocation: decimal point position
+///   @retval isNegative: the parity
 tuple<char *, int, int, bool> inputHandle(string str) {
   bool isNegative = 0;
   if (str[0] == '-') {
@@ -83,7 +85,8 @@ tuple<char *, int, int, bool> inputHandle(string str) {
       arrayHead = str2charl(str);
       break;
     }
-    case 2: {  // use pLocation to record '.'s position
+    case 2: {
+      // use pLocation to record '.'s position
       pLocation = str.find('.');
       str.erase(pLocation, 1);
       pLocation = str.length() - pLocation;
@@ -103,7 +106,7 @@ tuple<char *, int, int, bool> inputHandle(string str) {
         // TODO(JustLittleFive): Should split string first
         // DONE
         string strHead = str.substr(0, eLocation);
-        if (rpLocation) {
+        if (rpLocation != string::npos) {
           strHead.erase(rpLocation, 1);
         }
         pLocation = strHead.length() - rpLocation;
@@ -132,9 +135,9 @@ tuple<char *, int, int, bool> inputHandle(string str) {
 }
 
 /// @brief mul two input bit by bit to aviod data loss
-/// @param array1: input in char[] form
-/// @param array2: input in char[] form
-/// @return ret: string form, could it start with '.'?
+/// @param array1: char[], input in char[] form
+/// @param array2: char[], input in char[] form
+/// @return ret: string, could it start with '.'? no
 string hugeMul(char *array1, char *array2) {
   char res[strlen(array1) + strlen(array2)] = {0};
 
@@ -161,9 +164,14 @@ string hugeMul(char *array1, char *array2) {
   return ret;
 }
 
+/// @brief A simple multiplier with full precision
+/// @param argc: int, should be 3
+/// @param argv: char[], 2 input parms
+/// @return state: state code 0 with output result to terminal
 int main(int argc, char *argv[]) {
   string str1 = argv[1];
   string str2 = argv[2];
+  // input with ostream:
   // cout << "input" << endl;
   // string str1 = "";
   // string str2 = "";
@@ -171,26 +179,23 @@ int main(int argc, char *argv[]) {
   tuple<char *, int, int, bool> input1;
   tuple<char *, int, int, bool> input2;
   input1 = inputHandle(str1);
-  // cout << "input1 check" << endl;
   input2 = inputHandle(str2);
-  // cout << "input2 check" << endl;
-  // cout << "str1: " << get<0>(input1) << endl;
-  // cout << "str2: " << get<0>(input2) << endl;
 
   // calculate result - or +
   bool isNegative = get<3>(input1) ^ get<3>(input2);
-  // char negative = (get<3>(input1) * get<3>(input2)) ? '-' : '';
-  // cout << "hugeMul start" << endl;
-  string resHead = hugeMul(get<0>(input1), get<0>(input2));
-  // cout << "hugeMul end" << endl;
-  int resTail = get<1>(input1) + get<1>(input2);
-  int pLocation = get<2>(input1) + get<2>(input2);
 
+  // calculate result value or its decimal part
+  string resHead = hugeMul(get<0>(input1), get<0>(input2));
+  // calculate result power part
+  int resTail = get<1>(input1) + get<1>(input2);
+  // calculate decimal point position
+  int pLocation = get<2>(input1) + get<2>(input2);
+  // combine decimal part with decimal point
   while (resHead.length() <= pLocation) {
     resHead.insert(0, "0");
   }
   resHead.insert(resHead.length() - pLocation, ".");
-
+  // format output
   cout << str1 << " * " << str2 << " = ";
   if (isNegative) {
     cout << '-';
