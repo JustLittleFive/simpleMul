@@ -15,6 +15,7 @@
  */
 
 #include <algorithm>
+#include <cmath>
 #include <cstring>
 #include <iostream>
 #include <tuple>
@@ -160,13 +161,49 @@ string hugeMul(char *array1, char *array2) {
   // will ruin the decimal point position calculation.
   string ret = "";
   for (int i = 0; i < sizeof(retP); i++) {
-    if (retP[i] != '0') {
       // use push_back() to avoid the hint
       ret.push_back(retP[i]);
-    }
+  }
+  while(ret[0] == '0'){
+    ret.erase(0,1);
   }
 
   return ret;
+}
+
+/// @brief Schönhage–Strassen algorithm, inspired by the article
+/// https://blog.csdn.net/u010983881/article/details/77503519
+/// @param str1
+/// @param str2
+/// @return string
+string karatsuba(string str1, string str2) {
+  // 计算拆分长度
+  int size1 = str1.length();
+  int size2 = str2.length();
+  if (size1 == 0 || size2 == 0) {
+    return to_string(0);
+  }
+  if (size1 < 3 || size2 < 3) {
+    int num1 = stoi(str1);
+    int num2 = stoi(str2);
+    //递归终止条件
+    return to_string(num1 * num2);
+  }
+
+  int halfN = max(size1, size2) / 2;
+
+  /* 拆分为a, b, c, d */
+  string a = str1.substr(0, size1 - halfN);
+  string b = str1.substr(size1 - halfN, size1);
+  string c = str2.substr(0, size2 - halfN);
+  string d = str2.substr(size2 - halfN, size2);
+
+  // 计算z2, z0, z1, 此处的乘法使用递归
+  long z2 = stol(karatsuba(a, c));
+  long z0 = stol(karatsuba(b, d));
+  long z1 = stol(karatsuba((a + b), (c + d))) - z0 - z2;
+
+  return to_string(z2 * pow(10, (2 * halfN)) + z1 * pow(10, halfN) + z0);
 }
 
 /// @brief A simple multiplier with full precision
@@ -174,13 +211,13 @@ string hugeMul(char *array1, char *array2) {
 /// @param argv: char[], 2 input parms
 /// @return state: state code 0 with output result to terminal
 int main(int argc, char *argv[]) {
-  string str1 = argv[1];
-  string str2 = argv[2];
+  // string str1 = argv[1];
+  // string str2 = argv[2];
   // input with ostream:
-  // cout << "input" << endl;
-  // string str1 = "";
-  // string str2 = "";
-  // cin >> str1 >> str2;
+  cout << "input" << endl;
+  string str1 = "";
+  string str2 = "";
+  cin >> str1 >> str2;
   tuple<char *, int, int, bool> input1;
   tuple<char *, int, int, bool> input2;
   input1 = inputHandle(str1);
@@ -190,6 +227,27 @@ int main(int argc, char *argv[]) {
   bool isNegative = get<3>(input1) ^ get<3>(input2);
   // calculate result value or its decimal part
   string resHead = hugeMul(get<0>(input1), get<0>(input2));
+
+  // // calculate in different way
+  // string array1 = "";
+  // char *out1 = get<0>(input1);
+  // for (int i = 0; i < sizeof(out1); i++) {
+  //   if (out1[i]) {
+  //     array1.push_back(out1[i]);
+  //   }
+  // }
+  // cout << "array1: " << array1 << endl;
+  // string array2 = "";
+  // char *out2 = get<0>(input2);
+  // for (int i = 0; i < sizeof(out2); i++) {
+  //   if (out2[i]) {
+  //     array2.push_back(out2[i]);
+  //   }
+  // }
+  // cout << "array2: " << array2 << endl;
+  // string resHead = karatsuba(array1, array2);
+  // cout << "resHead: " << resHead << endl;
+
   // calculate result power part
   int resTail = get<1>(input1) + get<1>(input2);
   // calculate decimal point position
