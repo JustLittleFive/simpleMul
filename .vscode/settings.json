@@ -7,7 +7,8 @@
         "array": "cpp",
         "*.tcc": "cpp",
         "istream": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "string_view": "cpp"
     },
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
         "clang-diagnostic-error",

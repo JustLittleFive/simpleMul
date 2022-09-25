@@ -161,49 +161,141 @@ string hugeMul(char *array1, char *array2) {
   // will ruin the decimal point position calculation.
   string ret = "";
   for (int i = 0; i < sizeof(retP); i++) {
-      // use push_back() to avoid the hint
-      ret.push_back(retP[i]);
+    // use push_back() to avoid the hint
+    ret.push_back(retP[i]);
   }
-  while(ret[0] == '0'){
-    ret.erase(0,1);
+  while (ret[0] == '0') {
+    ret.erase(0, 1);
   }
 
   return ret;
 }
 
-/// @brief Schönhage–Strassen algorithm, inspired by the article
-/// https://blog.csdn.net/u010983881/article/details/77503519
+/// @brief Fill the digits with 0 to facilitate subsequent calculations,
+/// inspired by the article
+/// https://www.geeksforgeeks.org/karatsuba-algorithm-for-fast-multiplication-using-divide-and-conquer-algorithm/
+/// @param num1: multiplier
+/// @param num2: multiplier
+/// @return length: max of length(num1) length(num2)
+int addZeros(string &num1, string &num2) {
+  int l1 = num1.size();
+  int l2 = num2.size();
+  if (l1 > l2) {
+    for (int i = 0; i < l1 - l2; i++) {
+      num2 = ('0' + num2);
+    }
+  } else {
+    for (int i = 0; i < l2 - l1; i++) {
+      num1 = ('0' + num1);
+    }
+  }
+  return max(l1, l2);
+}
+
+/// @brief add two string bit by bit, inspired by the article
+/// https://www.geeksforgeeks.org/karatsuba-algorithm-for-fast-multiplication-using-divide-and-conquer-algorithm/
+/// @param s1
+/// @param s2
+/// @return string
+string strAdd(string s1, string s2) {
+  int carrier = 0;
+  int bitresult = 0;
+  string fullResult = "";
+  string finalResult = "";
+  addZeros(s1, s2);
+  for (int i = s1.length() - 1; i >= 0; i--) {
+    bitresult = s1[i] - '0' + s2[i] - '0' + carrier;
+    carrier = 0;
+    if (bitresult > 9) {
+      carrier = 1;
+      bitresult = bitresult - 10;
+    }
+    fullResult.push_back(bitresult + '0');
+  }
+  if (carrier == 1) {
+    fullResult.push_back('1');
+  }
+  for (int i = 0; i < fullResult.size(); i++) {
+    finalResult.push_back(fullResult[fullResult.size() - i - 1]);
+  }
+  // finalResult.push_back('\0');
+  int pos = finalResult.find_first_not_of('0');
+  if (pos != string::npos) {
+    finalResult = finalResult.substr(pos, finalResult.size() - pos);
+  } else {
+    finalResult = "0";
+  }
+  return finalResult;
+}
+
+/// @brief minus two string bit by bit, inspired by the article
+/// https://www.geeksforgeeks.org/karatsuba-algorithm-for-fast-multiplication-using-divide-and-conquer-algorithm/
+/// @param s1
+/// @param s2
+/// @return string
+string strMinus(string s1, string s2) {
+  int carrier = 0;
+  int bitresult = 0;
+  string fullResult = "";
+  string finalResult = "";
+  addZeros(s1, s2);
+  for (int i = s1.length() - 1; i >= 0; i--) {
+    bitresult = s1[i] - s2[i] - carrier;
+    carrier = 0;
+
+    if (bitresult < 0) {
+      carrier = 1;
+      bitresult = bitresult + 10;
+    }
+
+    fullResult.push_back(bitresult + '0');
+  }
+  for (int i = 0; i < fullResult.size(); i++) {
+    finalResult.push_back(fullResult[fullResult.size() - i - 1]);
+  }
+  int pos = finalResult.find_first_not_of('0');
+  if (pos != string::npos) {
+    finalResult = finalResult.substr(pos, finalResult.size() - pos);
+  } else {
+    finalResult = "0";
+  }
+  return finalResult;
+}
+
+/// @brief Karatsuba algorithm, inspired by the article
+/// https://www.geeksforgeeks.org/karatsuba-algorithm-for-fast-multiplication-using-divide-and-conquer-algorithm/
 /// @param str1
 /// @param str2
 /// @return string
 string karatsuba(string str1, string str2) {
-  // 计算拆分长度
-  int size1 = str1.length();
-  int size2 = str2.length();
-  if (size1 == 0 || size2 == 0) {
-    return to_string(0);
-  }
-  if (size1 < 3 || size2 < 3) {
-    int num1 = stoi(str1);
-    int num2 = stoi(str2);
-    //递归终止条件
-    return to_string(num1 * num2);
+  int len = addZeros(str1, str2);
+
+  if (len == 1) {
+    return to_string(atoi(str1.c_str()) * atoi(str2.c_str()));
   }
 
-  int halfN = max(size1, size2) / 2;
+  int subLen = len / 2;
+  string a = str1.substr(0, subLen);
+  string b = str1.substr(subLen, len - subLen);
+  string c = str2.substr(0, subLen);
+  string d = str2.substr(subLen, len - subLen);
 
-  /* 拆分为a, b, c, d */
-  string a = str1.substr(0, size1 - halfN);
-  string b = str1.substr(size1 - halfN, size1);
-  string c = str2.substr(0, size2 - halfN);
-  string d = str2.substr(size2 - halfN, size2);
+  string ac = karatsuba(a, c);
+  string bd = karatsuba(b, d);
+  // string acPbd = strAdd(ac, bd);
+  // string adPbc = strAdd(karatsuba(a, d), karatsuba(b, c));
+  string aPbcPd = karatsuba(strAdd(a, b), strAdd(c, d));
+  string adPbc = strMinus(aPbcPd, strAdd(ac, bd));
 
-  // 计算z2, z0, z1, 此处的乘法使用递归
-  long z2 = stol(karatsuba(a, c));
-  long z0 = stol(karatsuba(b, d));
-  long z1 = stol(karatsuba((a + b), (c + d))) - z0 - z2;
+  int bitShift = len - subLen;
+  for (int i = 0; i < bitShift * 2; i++) {
+    ac = ac + '0';
+  }
+  for (int i = 0; i < bitShift; i++) {
+    adPbc = adPbc + '0';
+  }
 
-  return to_string(z2 * pow(10, (2 * halfN)) + z1 * pow(10, halfN) + z0);
+  return strAdd(strAdd(ac, adPbc), bd);
 }
 
 /// @brief A simple multiplier with full precision
@@ -225,28 +317,28 @@ int main(int argc, char *argv[]) {
 
   // calculate result - or +
   bool isNegative = get<3>(input1) ^ get<3>(input2);
-  // calculate result value or its decimal part
-  string resHead = hugeMul(get<0>(input1), get<0>(input2));
+  // // calculate result value or its decimal part in native way
+  // string resHead = hugeMul(get<0>(input1), get<0>(input2));
 
-  // // calculate in different way
-  // string array1 = "";
-  // char *out1 = get<0>(input1);
-  // for (int i = 0; i < sizeof(out1); i++) {
-  //   if (out1[i]) {
-  //     array1.push_back(out1[i]);
-  //   }
-  // }
-  // cout << "array1: " << array1 << endl;
-  // string array2 = "";
-  // char *out2 = get<0>(input2);
-  // for (int i = 0; i < sizeof(out2); i++) {
-  //   if (out2[i]) {
-  //     array2.push_back(out2[i]);
-  //   }
-  // }
-  // cout << "array2: " << array2 << endl;
-  // string resHead = karatsuba(array1, array2);
-  // cout << "resHead: " << resHead << endl;
+  // calculate using Karatsuba algorithm, pre-processing part
+  string array1 = "";
+  char *out1 = get<0>(input1);
+  for (int i = 0; i < sizeof(out1); i++) {
+    if (out1[i]) {
+      array1.push_back(out1[i]);
+    }
+  }
+  cout << "array1: " << array1 << endl;
+  string array2 = "";
+  char *out2 = get<0>(input2);
+  for (int i = 0; i < sizeof(out2); i++) {
+    if (out2[i]) {
+      array2.push_back(out2[i]);
+    }
+  }
+
+  // calculate in Karatsuba algorithm
+  string resHead = karatsuba(array1, array2);
 
   // calculate result power part
   int resTail = get<1>(input1) + get<1>(input2);
