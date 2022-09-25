@@ -29,11 +29,12 @@ char *str2charl(string str) {
   const char *input = str.c_str();
   int len = str.length();
   char *array = new char[len];
-
   for (int i = 0; i < len; i++) {
-    if (array[i] != 45 && array[i] < 48 && array[i] > 57) {
-      cout << "Invalid input!" << endl;
-      exit(0);
+    if (str[i] < 48 || str[i] > 57) {
+      if (str[i] != 45) {
+        cout << "Invalid input!" << endl;
+        exit(0);
+      }
     }
     array[i] = input[i];
   }
@@ -113,7 +114,7 @@ tuple<char *, int, int, bool> inputHandle(string str) {
         pLocation = strHead.length() - rpLocation;
         arrayHead = str2charl(strHead);
         str.erase(eLocation, 1);
-        string strTail = str.substr(eLocation, str.size());
+        string strTail = str.substr(eLocation, str.length());
         arrayTail = stoi(str2charl(strTail));
         break;
       } else {
@@ -141,7 +142,6 @@ tuple<char *, int, int, bool> inputHandle(string str) {
 /// @return ret: string, could it start with '.'? no
 string hugeMul(char *array1, char *array2) {
   char res[strlen(array1) + strlen(array2)] = {0};
-
   for (int i = strlen(array1) - 1; i >= 0; i--) {
     for (int l = strlen(array2) - 1; l >= 0; l--) {
       // -'0' converts char to number in real
@@ -151,12 +151,10 @@ string hugeMul(char *array1, char *array2) {
       res[i + l + 1] %= 10;
     }
   }
-
   char retP[sizeof(res)] = {0};
   for (int i = 0; i < sizeof(res); i++) {
     retP[i] = res[i] + '0';
   }
-
   // hint: use string ret(retP) directly could possiblely include the '\n', and
   // will ruin the decimal point position calculation.
   string ret = "";
@@ -167,7 +165,6 @@ string hugeMul(char *array1, char *array2) {
   while (ret[0] == '0') {
     ret.erase(0, 1);
   }
-
   return ret;
 }
 
@@ -303,13 +300,14 @@ string karatsuba(string str1, string str2) {
 /// @param argv: char[], 2 input parms
 /// @return state: state code 0 with output result to terminal
 int main(int argc, char *argv[]) {
-  // string str1 = argv[1];
-  // string str2 = argv[2];
-  // input with ostream:
-  cout << "input" << endl;
-  string str1 = "";
-  string str2 = "";
-  cin >> str1 >> str2;
+  string str1 = argv[1];
+  string str2 = argv[2];
+  // // input in debug mode with ostream:
+  // cout << "input" << endl;
+  // string str1 = "";
+  // string str2 = "";
+  // cin >> str1 >> str2;
+
   tuple<char *, int, int, bool> input1;
   tuple<char *, int, int, bool> input2;
   input1 = inputHandle(str1);
@@ -328,7 +326,6 @@ int main(int argc, char *argv[]) {
       array1.push_back(out1[i]);
     }
   }
-  cout << "array1: " << array1 << endl;
   string array2 = "";
   char *out2 = get<0>(input2);
   for (int i = 0; i < sizeof(out2); i++) {
