@@ -85,7 +85,7 @@ string karatsuba(string str1, string str2) {
 ```
 
 ## Part 3: Result & Verification
-![result screenshoot](/path/to/img.jpg "Title")
+![result screenshoot](result.JPG "result screenshoot")
 
 ## Part 4 - Difficulties & Solutions
 1. C++ `char[]` sometime automaticly add an `'\n'` as end character. After bit calculate and convert `char[]` to `string` could possibly add extra unexpected characters at the end.  
