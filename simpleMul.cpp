@@ -155,7 +155,7 @@ string hugeMul(char *array1, char *array2) {
   for (int i = 0; i < sizeof(res); i++) {
     retP[i] = res[i] + '0';
   }
-  // hint: use string ret(retP) directly could possiblely include the '\n', and
+  // hint: use string ret(retP) directly could possiblely not end with '\0', and
   // will ruin the decimal point position calculation.
   string ret = "";
   for (int i = 0; i < sizeof(retP); i++) {
