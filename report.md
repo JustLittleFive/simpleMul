@@ -88,8 +88,8 @@ string karatsuba(string str1, string str2) {
 ![result screenshoot](result.JPG "result screenshoot")
 
 ## Part 4 - Difficulties & Solutions
-1. C++ `char[]` sometime automaticly add an `'\n'` as end character. After bit calculate and convert `char[]` to `string` could possibly add extra unexpected characters at the end.  
-2. Use `std::string str(char *)` method directly could possiblely include the `'\n'`, and will ruin the decimal point position calculation.   
+1. C++ `char[]` won't automaticly add an `'\0'` as end character. After bit calculate and convert `char[]` to `string` could possibly add extra unexpected characters at the end.  
+2. Use `std::string str(char *)` method directly could possiblely include extra unexpected characters, and will ruin the decimal point position calculation.   
 3. For the string type, the add and minus methods need to be rewritten into `strAdd(string str1, string str2)` and `strAdd(string str1, string str2)` to meet the needs of bitwise operations.   
 4. In order to meet the needs of Karatsuba algorithm, the function `addZero(string str1, string str2)` is responsible for filling the digits of the two multipliers.  
 5. Input validity checks are scattered in the `inputHandle(string str)` and `str2charl(string str)` functions. The output is also spliced from multiple objects as follow:
